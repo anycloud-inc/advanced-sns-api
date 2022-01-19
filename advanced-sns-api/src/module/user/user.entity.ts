@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { Friendship } from '../friendship/friendship.entity'
 import { Message } from '../message/message.entity'
 import { PostViewable } from '../post-viewable/post-viewable.entity'
 import { Post } from '../post/post.entity'
@@ -45,6 +46,12 @@ export class User {
 
   @OneToMany(_ => PostViewable, obj => obj.user)
   postViewables?: PostViewable[]
+
+  @OneToMany(() => Friendship, obj => obj.user, { cascade: true })
+  friendships?: Friendship[]
+
+  @OneToMany(() => Friendship, obj => obj.friend, { cascade: true })
+  reverseFriendships!: Friendship[]
 
   @CreateDateColumn()
   readonly createdAt?: Date
