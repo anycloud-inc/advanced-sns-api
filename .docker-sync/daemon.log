@@ -1,0 +1,28 @@
+          ok  Starting native_osx for sync advanced-sns-api-sync
+          ok  advanced-sns-api-sync container still running, restarting unison in container
+unison: stopped
+unison: started
+     success  Sync container started
+     success  Showing unison logs from your sync container: advanced-sns-api-sync
+[2022-01-19 16:48:56 +0900] Sync Log:  tail: can't open '/tmp/unison.log': No such file or directory
+          ok  Starting native_osx for sync advanced-sns-api-sync
+          ok  advanced-sns-api-sync container still running, restarting unison in container
+unison: stopped
+unison: started
+     success  Sync container started
+     success  Showing unison logs from your sync container: advanced-sns-api-sync
+[2022-01-19 16:53:12 +0900] Sync Log:  tail: can't open '/tmp/unison.log': No such file or directory
+          ok  Starting native_osx for sync advanced-sns-api-sync
+          ok  advanced-sns-api-sync container still running, restarting unison in container
+unison: stopped
+unison: started
+     success  Sync container started
+     success  Showing unison logs from your sync container: advanced-sns-api-sync
+[2022-01-19 16:55:31 +0900] Sync Log:  tail: can't open '/tmp/unison.log': No such file or directory
+          ok  Starting native_osx for sync advanced-sns-api-sync
+          ok  advanced-sns-api-sync container still running, restarting unison in container
+unison: stopped
+unison: started
+     success  Sync container started
+     success  Showing unison logs from your sync container: advanced-sns-api-sync
+[2022-01-19 19:05:13 +0900] Sync Log:  tail: can't open '/tmp/unison.log': No such file or directory
