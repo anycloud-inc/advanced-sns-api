@@ -1,15 +1,17 @@
-import { addPagination, PaginationParams } from 'src/lib/typeorm-helper'
-import { validateOrFail } from 'src/lib/validate'
 import {
-  EntityManager,
-  getManager,
-  getRepository,
-  SelectQueryBuilder,
-} from 'typeorm'
+  addPagination,
+  loadRelations,
+  PaginationParams,
+} from 'src/lib/typeorm-helper'
+import { validateOrFail } from 'src/lib/validate'
+import { getManager, getRepository, SelectQueryBuilder } from 'typeorm'
+import { Message } from '../message/message.entity'
+import { postViewableService } from '../post-viewable/post-viewable.service'
 import { Post } from './post.entity'
 
 interface CreateParams {
   body: string
+  viewableUserIds?: number[]
 }
 
 interface FindParams {
@@ -28,7 +30,7 @@ export const postService = {
     if (params.filter) qb = this._addSearchFilter(qb, params.filter)
     qb = addPagination(qb, params.pagination)
     let posts = await qb.getMany()
-
+    await loadRelations(posts, ['viewables'])
     return posts
   },
 
@@ -53,18 +55,26 @@ export const postService = {
 
     post = await getManager().transaction(async em => {
       post = await em.save(post)
-      await this._createAttachments(em, post, params)
+      if (params.viewableUserIds) {
+        await postViewableService.createForPost(
+          em,
+          post.id!,
+          params.viewableUserIds
+        )
+      }
       return post
     })
 
     return post
   },
 
-  async _createAttachments(
-    em: EntityManager,
-    post: Post,
-    params: CreateParams
-  ) {},
+  async loadOwnMessages(userId: number, posts: Post[]) {
+    const qb = getRepository(Message)
+      .createQueryBuilder('message')
+      .where('message.userId = :userId', { userId })
+    await loadRelations(posts, [{ name: 'messages', qb }])
+    return await qb.getMany()
+  },
 
   async _validatePost(post: Post) {
     await validateOrFail(post)

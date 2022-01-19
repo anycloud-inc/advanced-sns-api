@@ -50,7 +50,6 @@ export class PostController {
         req.currentUser.id!,
         req.body.post
       )
-
       res.json({ post: postSerializer.build(post) })
     } catch (e) {
       next(e)

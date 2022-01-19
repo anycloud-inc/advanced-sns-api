@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Message } from '../message/message.entity'
+import { PostViewable } from '../post-viewable/post-viewable.entity'
 import { Post } from '../post/post.entity'
 import { RoomUser } from '../room-user/room-user.entity'
 
@@ -41,6 +42,9 @@ export class User {
 
   @OneToMany(_ => Message, obj => obj.user, { cascade: true })
   messages?: Message[]
+
+  @OneToMany(_ => PostViewable, obj => obj.user)
+  postViewables?: PostViewable[]
 
   @CreateDateColumn()
   readonly createdAt?: Date
