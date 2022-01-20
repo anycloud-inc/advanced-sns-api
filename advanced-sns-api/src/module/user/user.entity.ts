@@ -11,6 +11,7 @@ import {
 import { FriendRequest } from '../friend-request/friend-request.entity'
 import { Friendship } from '../friendship/friendship.entity'
 import { Message } from '../message/message.entity'
+import { PostSeenLog } from '../post-seen-log/post-seen-log.entity'
 import { PostViewable } from '../post-viewable/post-viewable.entity'
 import { Post } from '../post/post.entity'
 import { RoomUser } from '../room-user/room-user.entity'
@@ -59,6 +60,9 @@ export class User {
 
   @OneToMany(() => FriendRequest, obj => obj.receiver, { cascade: true })
   receivingFriendRequests!: FriendRequest[]
+
+  @OneToMany(_ => PostSeenLog, obj => obj.user)
+  seenLogs?: PostSeenLog[]
 
   @CreateDateColumn()
   readonly createdAt?: Date

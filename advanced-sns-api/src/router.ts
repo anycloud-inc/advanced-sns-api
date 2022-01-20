@@ -9,6 +9,7 @@ import { MessageController } from './module/message/message.controller'
 import { PostSeenLogController } from './module/post-seen-log/post-seen-log.controller'
 import { PostController } from './module/post/post.controller'
 import { RoomController } from './module/room/room.controller'
+import { TimelineController } from './module/timeline/timeline.controller'
 
 const router = express.Router()
 
@@ -30,5 +31,6 @@ useController(router, MessageController)
 useController(router, FriendRequestController)
 useController(router, PostSeenLogController)
 useController(router, FriendController)
+useController(router, TimelineController)
 
 export default router
