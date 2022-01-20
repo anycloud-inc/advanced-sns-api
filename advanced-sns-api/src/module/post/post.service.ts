@@ -30,7 +30,7 @@ export const postService = {
     if (params.filter) qb = this._addSearchFilter(qb, params.filter)
     qb = addPagination(qb, params.pagination)
     let posts = await qb.getMany()
-    await loadRelations(posts, ['viewables'])
+    await loadRelations(posts, ['messages', 'seenLogs', 'viewables'])
     return posts
   },
 

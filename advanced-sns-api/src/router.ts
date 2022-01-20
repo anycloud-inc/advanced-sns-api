@@ -4,7 +4,9 @@ import { useController } from './lib/controller'
 import { AccountController } from './module/account/account.controller'
 import { AuthController } from './module/auth/auth.controller'
 import { FriendRequestController } from './module/friend-request/friend-request.controller'
+import { FriendController } from './module/friend/friend.controller'
 import { MessageController } from './module/message/message.controller'
+import { PostSeenLogController } from './module/post-seen-log/post-seen-log.controller'
 import { PostController } from './module/post/post.controller'
 import { RoomController } from './module/room/room.controller'
 
@@ -26,5 +28,7 @@ useController(router, PostController)
 useController(router, RoomController)
 useController(router, MessageController)
 useController(router, FriendRequestController)
+useController(router, PostSeenLogController)
+useController(router, FriendController)
 
 export default router
