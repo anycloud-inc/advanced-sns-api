@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  DeleteDateColumn,
 } from 'typeorm'
 import { User } from '../user/user.entity'
 import { IsValidFriend } from './friendship.validator'
@@ -37,6 +38,9 @@ export class Friendship {
   })
   @Index()
   friend!: User
+
+  @DeleteDateColumn()
+  readonly deletedAt?: Date | null
 
   @CreateDateColumn()
   readonly createdAt?: Date

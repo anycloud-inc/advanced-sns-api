@@ -5,6 +5,7 @@ import { AccountController } from './module/account/account.controller'
 import { AuthController } from './module/auth/auth.controller'
 import { FriendRequestController } from './module/friend-request/friend-request.controller'
 import { FriendController } from './module/friend/friend.controller'
+import { FriendshipController } from './module/friendship/friendship.controller'
 import { MessageController } from './module/message/message.controller'
 import { PostSeenLogController } from './module/post-seen-log/post-seen-log.controller'
 import { PostController } from './module/post/post.controller'
@@ -32,5 +33,6 @@ useController(router, FriendRequestController)
 useController(router, PostSeenLogController)
 useController(router, FriendController)
 useController(router, TimelineController)
+useController(router, FriendshipController)
 
 export default router

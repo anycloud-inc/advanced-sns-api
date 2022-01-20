@@ -73,6 +73,44 @@ export const friendshipService = {
     await postViewableService.createForUser(em, targetUserId, postIds)
   },
 
+  async deleteByUser(userId: number, friendId: number, em?: EntityManager) {
+    await this._delete(userId, friendId, em)
+  },
+
+  async _delete(userId: number, friendId: number, em?: EntityManager) {
+    if (em != null) {
+      return this._deleteInTransaction(userId, friendId, em)
+    } else {
+      return await getManager().transaction(async entityManager => {
+        return this._deleteInTransaction(userId, friendId, entityManager)
+      })
+    }
+  },
+
+  async _deleteInTransaction(
+    userId: number,
+    friendId: number,
+    em: EntityManager
+  ) {
+    const params = { userId, friendId }
+    const now = new Date()
+    await em
+      .getRepository(Friendship)
+      .createQueryBuilder()
+      .where('userId = :userId AND friendId = :friendId', params)
+      .andWhere('deletedAt IS NULL')
+      .update({ deletedAt: now })
+      .execute()
+
+    await em
+      .getRepository(Friendship)
+      .createQueryBuilder()
+      .where('userId = :friendId AND friendId = :userId', params)
+      .andWhere('deletedAt IS NULL')
+      .update({ deletedAt: now })
+      .execute()
+  },
+
   async validate(friendship: Friendship) {
     await validateOrFail(friendship)
   },
