@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import { FriendRequest } from '../friend-request/friend-request.entity'
 import { Friendship } from '../friendship/friendship.entity'
+import { MessageReaction } from '../message-reaction/message-reaction.entity'
 import { Message } from '../message/message.entity'
 import { PostSeenLog } from '../post-seen-log/post-seen-log.entity'
 import { PostViewable } from '../post-viewable/post-viewable.entity'
@@ -63,6 +64,9 @@ export class User {
 
   @OneToMany(_ => PostSeenLog, obj => obj.user)
   seenLogs?: PostSeenLog[]
+
+  @OneToMany(_ => MessageReaction, obj => obj.user)
+  messageReactions?: MessageReaction[]
 
   @CreateDateColumn()
   readonly createdAt?: Date

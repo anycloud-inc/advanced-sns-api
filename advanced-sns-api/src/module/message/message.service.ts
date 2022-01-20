@@ -79,10 +79,17 @@ export const messageService = {
   },
 
   async findOne(messageId: number): Promise<Message> {
+    console.log(messageId)
     const message = await getRepository(Message).findOneOrFail(messageId, {
       relations: this.toOneContents(),
     })
     return message
+  },
+
+  async touchUpdatedAt(message: Message) {
+    message.updatedAt = new Date()
+    await validateOrFail(message)
+    return await getRepository(Message).save(message)
   },
 
   async findMessages(

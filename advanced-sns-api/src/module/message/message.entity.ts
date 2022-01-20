@@ -6,12 +6,14 @@ import {
   Column,
   ManyToOne,
   Index,
+  OneToMany,
 } from 'typeorm'
 import { User } from '../user/user.entity'
 import { IsNotEmpty } from 'class-validator'
 import { ForbidWhiteSpaceOnly, IsValidUser } from './message.validator'
 import { Room } from '../room/room.entity'
 import { Post } from '../post/post.entity'
+import { MessageReaction } from '../message-reaction/message-reaction.entity'
 
 @Entity()
 export class Message {
@@ -47,6 +49,9 @@ export class Message {
   @ManyToOne(_ => Post, obj => obj.messages, { onDelete: 'SET NULL' })
   @Index()
   post?: Post
+
+  @OneToMany(_ => MessageReaction, obj => obj.message)
+  messageReactions?: MessageReaction[]
 
   @CreateDateColumn()
   readonly createdAt?: Date
