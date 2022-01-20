@@ -11,6 +11,7 @@ import { PostSeenLogController } from './module/post-seen-log/post-seen-log.cont
 import { PostController } from './module/post/post.controller'
 import { RoomController } from './module/room/room.controller'
 import { TimelineController } from './module/timeline/timeline.controller'
+import { UserController } from './module/user/user.controller'
 
 const router = express.Router()
 
@@ -34,5 +35,6 @@ useController(router, PostSeenLogController)
 useController(router, FriendController)
 useController(router, TimelineController)
 useController(router, FriendshipController)
+useController(router, UserController)
 
 export default router
