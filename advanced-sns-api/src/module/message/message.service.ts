@@ -1,6 +1,7 @@
 import {
   addPagination,
   leftJoinRelations,
+  loadRelations,
   PaginationParams,
 } from 'src/lib/typeorm-helper'
 import { validateOrFail } from 'src/lib/validate'
@@ -22,6 +23,14 @@ interface CreateViaPostParams {
 export const messageService = {
   toOneContents() {
     return ['user', 'post']
+  },
+
+  toManyContents() {
+    return ['messageReactions']
+  },
+
+  relatedContents() {
+    return [...this.toOneContents(), ...this.toManyContents()]
   },
 
   async findLatestMessages(roomIds: string[]): Promise<Message[]> {
@@ -79,9 +88,8 @@ export const messageService = {
   },
 
   async findOne(messageId: number): Promise<Message> {
-    console.log(messageId)
     const message = await getRepository(Message).findOneOrFail(messageId, {
-      relations: this.toOneContents(),
+      relations: this.relatedContents(),
     })
     return message
   },
@@ -102,6 +110,7 @@ export const messageService = {
     const messages = await qb
       .andWhere('message.roomId = :roomId', { roomId })
       .getMany()
+    await loadRelations(messages, this.toManyContents())
     return messages
   },
 }
