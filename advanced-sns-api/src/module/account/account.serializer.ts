@@ -1,3 +1,4 @@
+import { Status } from '../friend-request/friend-request.entity'
 import { User } from '../user/user.entity'
 
 export const accountSerializer = {
@@ -7,6 +8,13 @@ export const accountSerializer = {
       name: user.name,
       email: user.email,
       iconImageUrl: user.iconImageUrl,
+      friendIds: user.friendships!.map(friendship => friendship.friendId),
+      sendingRequestUserIds: user.sendingFriendRequests
+        ?.filter(x => x.status === Status.Requesting)
+        .map(x => x.receiverId),
+      receivingRequestUserIds: user.receivingFriendRequests
+        ?.filter(x => x.status === Status.Requesting)
+        .map(x => x.senderId),
     }
   },
 }

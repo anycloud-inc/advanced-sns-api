@@ -5,6 +5,7 @@ import { accountSerializer } from './account.serializer'
 import { Auth } from 'src/lib/auth'
 import { accountService } from './account.service'
 import { upload } from 'src/lib/image-uploader'
+import { loadRelations } from 'src/lib/typeorm-helper'
 
 @Controller('/account')
 export class AccountController {
@@ -15,6 +16,10 @@ export class AccountController {
       res.json({ user: undefined })
       return
     }
+    await loadRelations(
+      [currentUser],
+      ['friendships', 'sendingFriendRequests', 'receivingFriendRequests']
+    )
     res.json({
       user: accountSerializer.build(currentUser),
     })
