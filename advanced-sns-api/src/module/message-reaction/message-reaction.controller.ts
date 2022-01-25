@@ -4,12 +4,23 @@ import { Controller, Delete, Post } from 'src/lib/controller'
 import { messageReactionPolicy } from './message-reaction.policy'
 import { messageReactionSerializer } from './message-reaction.serializer'
 import { messageReactionService } from './message-reaction.service'
+import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_server_interface/ts/types'
 
 @Controller('/message_reactions')
 export class MessageReactionController {
   @Post()
   @Auth
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(
+    req: Request<
+      {},
+      {},
+      openapi.operations['createMessageReaction']['requestBody']['content']['application/json']
+    >,
+    res: Response<
+      openapi.components['responses']['ResponseMessageReaction']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const messageReaction = await messageReactionService.create({
         content: req.body.content,
@@ -26,15 +37,22 @@ export class MessageReactionController {
 
   @Delete('/:id')
   @Auth
-  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async delete(
+    req: Request<
+      openapi.operations['deleteMessageReaction']['parameters']['path']
+    >,
+    res: Response<
+      openapi.components['responses']['ResponseSuccess']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const messageReactionId = parseInt(req.params.id)
       await messageReactionPolicy.deletableOrFail(
-        messageReactionId,
+        req.params.id,
         req.currentUser.id!
       )
       messageReactionService.delete({
-        messageReactionId,
+        messageReactionId: req.params.id,
         user: req.currentUser,
       })
       res.json({ success: true })

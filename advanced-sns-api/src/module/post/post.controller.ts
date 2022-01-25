@@ -10,12 +10,24 @@ import {
   checkParameterOrFail,
   getPaginationParams,
 } from 'src/lib/request-utils'
+import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_server_interface/ts/types'
 
 @Controller('/posts')
 export class PostController {
   @Get()
   @Auth
-  async index(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async index(
+    req: Request<
+      {},
+      {},
+      {},
+      openapi.paths['/posts']['get']['parameters']['query']
+    >,
+    res: Response<
+      openapi.components['responses']['ResponsePostList']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const posts = await postService.find({
         filter: req.query.filter as any,
@@ -31,9 +43,15 @@ export class PostController {
 
   @Get('/:id(\\d+)')
   @Auth
-  async show(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async show(
+    req: Request<openapi.operations['findPost']['parameters']['path']>,
+    res: Response<
+      openapi.components['responses']['ResponsePost']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const post = await postService.findOneOrFail(parseInt(req.params.id))
+      const post = await postService.findOneOrFail(req.params.id)
       await postPolicy.showableOrFail(post, req.currentUser.id!)
       res.json({ post: postSerializer.build(post) })
     } catch (e) {
@@ -43,7 +61,17 @@ export class PostController {
 
   @Post()
   @Auth
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(
+    req: Request<
+      {},
+      {},
+      openapi.paths['/posts']['post']['requestBody']['content']['application/json']
+    >,
+    res: Response<
+      openapi.components['responses']['ResponsePost']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
       checkParameterOrFail(req.body, 'post')
       const post = await postService.createPost(
@@ -58,13 +86,16 @@ export class PostController {
 
   @Auth
   @Delete('/:id')
-  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async delete(
+    req: Request<openapi.operations['deletePost']['parameters']['path']>,
+    res: Response<
+      openapi.components['responses']['ResponseSuccess']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const repo = getRepository(PostEntity)
-      await postPolicy.deletableOrFail(
-        parseInt(req.params.id),
-        req.currentUser.id!
-      )
+      await postPolicy.deletableOrFail(req.params.id, req.currentUser.id!)
       await repo.delete(req.params.id)
       res.json({ success: true })
     } catch (e) {

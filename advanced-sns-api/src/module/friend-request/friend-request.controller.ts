@@ -9,12 +9,24 @@ import { getRepository } from 'typeorm'
 import { FriendRequest, Status } from './friend-request.entity'
 import { friendRequestSerializer } from './friend-request.serializer'
 import { friendRequestService } from './friend-request.service'
+import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_server_interface/ts/types'
 
 @Controller('/friend_requests')
 export class FriendRequestController {
   @Get('/receiving')
   @Auth
-  async receiving(req: Request, res: Response, next: NextFunction) {
+  async receiving(
+    req: Request<
+      {},
+      {},
+      {},
+      openapi.paths['/friend_requests/receiving']['get']['parameters']['query']
+    >,
+    res: Response<
+      openapi.paths['/friend_requests/receiving']['get']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ) {
     try {
       const [requests, count] = await friendRequestService.getReceivingRequests(
         req.currentUser.id!,
@@ -31,7 +43,17 @@ export class FriendRequestController {
 
   @Post()
   @Auth
-  async create(req: Request, res: Response, next: NextFunction) {
+  async create(
+    req: Request<
+      {},
+      {},
+      openapi.paths['/friend_requests']['post']['requestBody']['content']['application/json']
+    >,
+    res: Response<
+      openapi.paths['/friend_requests']['post']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ) {
     try {
       await friendRequestService.create(
         req.currentUser.id!,
@@ -45,7 +67,17 @@ export class FriendRequestController {
 
   @Patch('/status')
   @Auth
-  async updateStatus(req: Request, res: Response, next: NextFunction) {
+  async updateStatus(
+    req: Request<
+      {},
+      {},
+      openapi.paths['/friend_requests/status']['patch']['requestBody']['content']['application/json']
+    >,
+    res: Response<
+      openapi.paths['/friend_requests/status']['patch']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ) {
     try {
       checkEnumParameterOrFail(req.body, { status: Status })
       const senderId = req.body.senderId
@@ -65,7 +97,17 @@ export class FriendRequestController {
 
   @Delete()
   @Auth
-  async delete(req: Request, res: Response, next: NextFunction) {
+  async delete(
+    req: Request<
+      {},
+      {},
+      openapi.paths['/friend_requests']['delete']['requestBody']['content']['application/json']
+    >,
+    res: Response<
+      openapi.paths['/friend_requests']['delete']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ) {
     try {
       const repo = getRepository(FriendRequest)
       const request = await repo.findOneOrFail({

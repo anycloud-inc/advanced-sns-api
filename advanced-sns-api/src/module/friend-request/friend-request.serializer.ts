@@ -1,9 +1,12 @@
 import dayjs = require('dayjs')
 import { userSerializer } from '../user/user.serializer'
 import { FriendRequest } from './friend-request.entity'
+import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_server_interface/ts/types'
 
 export const friendRequestSerializer = {
-  build: (item: FriendRequest) => {
+  build: (
+    item: FriendRequest
+  ): openapi.components['schemas']['EntityFriendRequest'] => {
     return {
       id: item.id!,
       senderId: item.senderId,

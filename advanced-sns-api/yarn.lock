@@ -879,6 +879,10 @@ acorn@^8.2.4, acorn@^8.4.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.6.0.tgz#e3692ba0eb1a0c83eaa4f37f5fa7368dd7142895"
   integrity sha512-U1riIR+lBSNi3IbxtaHOIKdH8sLFv3NYfNv8sg7ZsNhcfl4HF2++BfqqrNAxoCLQW1iiylOj76ecnaUxz+z9yw==
 
+"advanced-sns-openapi-server-interface@git+https://github.com/anycloud-inc/advanced-sns-openapi.git":
+  version "0.0.0"
+  resolved "git+https://github.com/anycloud-inc/advanced-sns-openapi.git#287ba504a2446f55e57a017d11fcbe81ac5e7c08"
+
 agent-base@6:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"

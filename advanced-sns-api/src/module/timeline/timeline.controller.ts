@@ -4,14 +4,17 @@ import { Controller, Get } from 'src/lib/controller'
 import { postService } from '../post/post.service'
 import { timelineSerializer } from './timeline.serializer'
 import { timelineService } from './timeline.service'
+import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_server_interface/ts/types'
 
 @Controller('/timeline')
 export class TimelineController {
   @Get('/by_each_person')
   @Auth
   async by_each_person(
-    req: Request,
-    res: Response,
+    req: Request<{}, {}, {}, {}>,
+    res: Response<
+      openapi.paths['/timeline/by_each_person']['get']['responses'][200]['content']['application/json']
+    >,
     next: NextFunction
   ): Promise<void> {
     try {
