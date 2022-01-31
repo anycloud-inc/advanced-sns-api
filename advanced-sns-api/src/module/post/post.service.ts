@@ -15,8 +15,8 @@ interface CreateParams {
 }
 
 interface FindParams {
-  pagination: PaginationParams
-  filter: FilterParams
+  pagination?: PaginationParams
+  filter?: FilterParams
 }
 
 export interface FilterParams {
@@ -28,7 +28,7 @@ export const postService = {
     const repo = getRepository(Post)
     let qb = repo.createQueryBuilder('post')
     if (params.filter) qb = this._addSearchFilter(qb, params.filter)
-    qb = addPagination(qb, params.pagination)
+    qb = addPagination(qb, params.pagination ?? {})
     let posts = await qb.getMany()
     await loadRelations(posts, ['messages', 'seenLogs', 'viewables'])
     return posts
