@@ -30,12 +30,13 @@ export const postService = {
     if (params.filter) qb = this._addSearchFilter(qb, params.filter)
     qb = addPagination(qb, params.pagination ?? {})
     let posts = await qb.getMany()
-    await loadRelations(posts, ['messages', 'seenLogs', 'viewables'])
+    await loadRelations(posts, ['user', 'messages', 'seenLogs', 'viewables'])
     return posts
   },
 
   async findOneOrFail(id: number): Promise<Post> {
     const post = await getRepository(Post).findOneOrFail(id, {})
+    await loadRelations([post], ['user'])
     return post
   },
 
