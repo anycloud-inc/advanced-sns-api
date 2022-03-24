@@ -12,6 +12,7 @@
     "typecheck": "tsc -p . --noEmit",
     "test": "jest --runInBand",
     "typeorm": "TS_NODE_TRANSPILE_ONLY=true yarn ts-node ./node_modules/typeorm/cli.js",
+    "gcp-build": "yarn install && tsc -p .",
     "start": "node -r ./tsconfig-paths-bootstrap.js dist/src/index.js",
     "console": "NODE_OPTIONS=--experimental-repl-await yarn ts-node console.ts"
   },
