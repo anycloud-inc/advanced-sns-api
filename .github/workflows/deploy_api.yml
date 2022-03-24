@@ -3,7 +3,7 @@ name: Deploy API
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'advanced-sns-api/**'
       - '.github/workflows/deploy_api.yml'
