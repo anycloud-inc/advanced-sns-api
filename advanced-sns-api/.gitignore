@@ -14,5 +14,3 @@ service-account.json
 # terraform
 .terraform
 .terraform.lock.hcl
-*.tfstate
-*.tfstate.*
