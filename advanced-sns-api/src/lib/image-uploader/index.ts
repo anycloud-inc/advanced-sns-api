@@ -4,6 +4,7 @@ import logger from 'src/lib/logger'
 import { mkdirSync } from 'fs'
 import generateHash from '../generate-hash'
 import AppError from 'src/error/AppError'
+import { LOCAL_UPLOADS_DIR } from 'src/constants'
 
 const FIELD_NAME = 'file' // ※送る側のキー名と同じにすること
 
@@ -11,7 +12,7 @@ export const upload =
   process.env.UPLOAD_TO_CLOUD === '1' ? uploadToCloud : uploadToLocal
 
 function getDestination(folderName: string) {
-  return `uploads/sns_app/${folderName}`
+  return `${folderName}`
 }
 
 function getFileName(file: Express.Multer.File) {
@@ -28,7 +29,7 @@ function uploadToLocal(
   res: Response,
   folderName: string
 ): Promise<{ fields: any; url: string }> {
-  const destination = getDestination(folderName)
+  const destination = getDestination(LOCAL_UPLOADS_DIR + '/' + folderName)
   mkdirSync(destination, { recursive: true })
   const storage = Multer.diskStorage({
     destination,
@@ -45,6 +46,7 @@ function uploadToLocal(
   return new Promise((resolve, reject) => {
     logger.log('Uploading file to local...')
     multer.single(FIELD_NAME)(req, res, (err: any) => {
+      console.log(req.file)
       if (req.file == null) return reject(new AppError('File required'))
       if (err) return reject(err)
 
