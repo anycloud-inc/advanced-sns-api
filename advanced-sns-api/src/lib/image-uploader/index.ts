@@ -5,6 +5,7 @@ import { mkdirSync } from 'fs'
 import generateHash from '../generate-hash'
 import AppError from 'src/error/AppError'
 import { LOCAL_UPLOADS_DIR } from 'src/constants'
+import CloudStorage from './cloud-storage'
 
 const FIELD_NAME = 'file' // ※送る側のキー名と同じにすること
 
@@ -75,7 +76,14 @@ function uploadToCloud(
     multer.single(FIELD_NAME)(req, res, (err: any) => {
       if (req.file == null) return reject(new AppError('File required'))
       if (err) return reject('MulterError: ' + err)
-      // TODO: クラウドにアップロード
+      CloudStorage.upload(req.file.buffer, getFilePath(folderName, req.file))
+        .then(url =>
+          resolve({
+            fields: req.body,
+            url,
+          })
+        )
+        .catch(err => reject(err))
     })
   })
 }
