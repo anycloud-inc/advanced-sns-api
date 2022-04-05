@@ -6,8 +6,10 @@ export const messageReactionSerializer = {
     item: MessageReaction
   ): openapi.components['schemas']['EntityMessageReaction'] => {
     return {
-      ...item,
       id: item.id!,
+      content: item.content!,
+      userId: item.userId!,
+      messageId: item.messageId!,
     }
   },
 }
