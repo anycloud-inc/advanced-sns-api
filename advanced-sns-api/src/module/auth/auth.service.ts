@@ -4,6 +4,7 @@ import { User } from '../user/user.entity'
 import { LoginError, ValidationError } from '../../error'
 import { encodeJwt } from 'src/lib/jwt'
 import { validateOrFail } from 'src/lib/validate'
+import { accountService } from '../account/account.service'
 
 interface SignupParams {
   email: string
@@ -32,6 +33,8 @@ export const authService = {
     })
     await validateOrFail(user)
     user = await repo.save(user)
+
+    await accountService.loadRelations(user)
     return {
       user,
       token: this._generateToken(user),
@@ -49,6 +52,7 @@ export const authService = {
     const valid = await argon2.verify(user.password, password)
     if (!valid) throw new LoginError()
 
+    await accountService.loadRelations(user)
     return {
       user,
       token: this._generateToken(user),
