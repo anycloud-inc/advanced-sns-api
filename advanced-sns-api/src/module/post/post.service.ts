@@ -36,7 +36,7 @@ export const postService = {
 
   async findOneOrFail(id: number): Promise<Post> {
     const post = await getRepository(Post).findOneOrFail(id, {})
-    await loadRelations([post], ['user'])
+    await loadRelations([post], ['user', 'messages', 'seenLogs', 'viewables'])
     return post
   },
 
@@ -53,7 +53,7 @@ export const postService = {
     })
 
     await this._validatePost(post)
-
+    console.log(params.viewableUserIds)
     post = await getManager().transaction(async em => {
       post = await em.save(post)
       if (params.viewableUserIds) {
