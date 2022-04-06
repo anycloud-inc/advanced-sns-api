@@ -12,7 +12,7 @@ import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_
 export class AccountController {
   @Get()
   async show(
-    req: Request,
+    req: Request<{}, {}, {}, {}>,
     res: Response<
       openapi.paths['/account']['get']['responses'][200]['content']['application/json']
     >,

@@ -3,8 +3,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator'
-import AppError from 'src/error/AppError'
-import { getRepository, Not } from 'typeorm'
+import { getRepository } from 'typeorm'
 import { Friendship } from '../friendship/friendship.entity'
 import { FriendRequest, Status } from './friend-request.entity'
 
