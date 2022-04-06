@@ -40,12 +40,15 @@ export class UserController {
 
   @Get('/:id(\\d+)')
   @Auth
-  async show(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async show(
+    req: Request<openapi.operations['findUser']['parameters']['path']>,
+    res: Response<
+      openapi.paths['/users/{id}']['get']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const user = await userService.findOneWithMetadata(
-        parseInt(req.params.id)
-      )
-
+      const user = await userService.findOneWithMetadata(req.params.id)
       res.json({
         user: userSerializer.build(user),
       })
