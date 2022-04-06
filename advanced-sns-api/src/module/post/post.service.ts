@@ -53,7 +53,6 @@ export const postService = {
     })
 
     await this._validatePost(post)
-    console.log(params.viewableUserIds)
     post = await getManager().transaction(async em => {
       post = await em.save(post)
       if (params.viewableUserIds) {
