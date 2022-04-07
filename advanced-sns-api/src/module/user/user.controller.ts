@@ -3,16 +3,28 @@ import { Auth } from 'src/lib/auth'
 import { Controller, Get } from 'src/lib/controller'
 import { getPaginationParams } from 'src/lib/request-utils'
 import { userSerializer } from './user.serializer'
-import { FindParams, userService } from './user.service'
+import { userService } from './user.service'
+import * as openapi from 'advanced-sns-openapi-server-interface/outputs/openapi_server_interface/ts/types'
 
 @Controller('/users')
 export class UserController {
   @Get()
   @Auth
-  async index(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async index(
+    req: Request<
+      {},
+      {},
+      {},
+      openapi.paths['/users']['get']['parameters']['query']
+    >,
+    res: Response<
+      openapi.paths['/users']['get']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const users = await userService.find(
-        req.query.filter as FindParams,
+        req.query.filter,
         getPaginationParams(req.query)
       )
       res.json({
@@ -28,12 +40,15 @@ export class UserController {
 
   @Get('/:id(\\d+)')
   @Auth
-  async show(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async show(
+    req: Request<openapi.operations['findUser']['parameters']['path']>,
+    res: Response<
+      openapi.paths['/users/{id}']['get']['responses'][200]['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const user = await userService.findOneWithMetadata(
-        parseInt(req.params.id)
-      )
-
+      const user = await userService.findOneWithMetadata(req.params.id)
       res.json({
         user: userSerializer.build(user),
       })
