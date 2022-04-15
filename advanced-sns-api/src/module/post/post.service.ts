@@ -24,19 +24,23 @@ export interface FilterParams {
 }
 
 export const postService = {
+  getPostRelations() {
+    return ['user', 'messages', 'seenLogs', 'seenLogs.user', 'viewables']
+  },
+
   async find(params: FindParams) {
     const repo = getRepository(Post)
     let qb = repo.createQueryBuilder('post')
     if (params.filter) qb = this._addSearchFilter(qb, params.filter)
     qb = addPagination(qb, params.pagination ?? {})
     let posts = await qb.getMany()
-    await loadRelations(posts, ['user', 'messages', 'seenLogs', 'viewables'])
+    await loadRelations(posts, this.getPostRelations())
     return posts
   },
 
   async findOneOrFail(id: number): Promise<Post> {
     const post = await getRepository(Post).findOneOrFail(id, {})
-    await loadRelations([post], ['user', 'messages', 'seenLogs', 'viewables'])
+    await loadRelations([post], this.getPostRelations())
     return post
   },
 

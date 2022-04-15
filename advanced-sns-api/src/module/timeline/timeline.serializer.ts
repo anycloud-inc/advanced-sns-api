@@ -8,7 +8,6 @@ export const timelineSerializer = {
     item: TimelineByPerson
   ): openapi.components['schemas']['EntityTimeline'] => {
     return {
-      ...item,
       user: userSerializer.build(item.user),
       posts: item.posts.map(x => postSerializer.build(x)),
     }
