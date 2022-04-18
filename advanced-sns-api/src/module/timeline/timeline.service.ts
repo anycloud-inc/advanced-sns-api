@@ -99,8 +99,9 @@ export const timelineService = {
 
     qb = leftJoinRelations(qb, ['user'])
     const posts = await qb.getMany()
-
     await loadRelations(posts, postService.getPostRelations())
+    await postService.loadOwnSeenLogs(userId, posts)
+
     return Object.fromEntries(
       friendIds.map(id => [id, posts.filter(p => p.userId === id)])
     )

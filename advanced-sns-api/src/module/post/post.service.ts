@@ -6,6 +6,7 @@ import {
 import { validateOrFail } from 'src/lib/validate'
 import { getManager, getRepository, SelectQueryBuilder } from 'typeorm'
 import { Message } from '../message/message.entity'
+import { PostSeenLog } from '../post-seen-log/post-seen-log.entity'
 import { postViewableService } from '../post-viewable/post-viewable.service'
 import { Post } from './post.entity'
 
@@ -77,6 +78,14 @@ export const postService = {
       .createQueryBuilder('message')
       .where('message.userId = :userId', { userId })
     await loadRelations(posts, [{ name: 'messages', qb }])
+    return await qb.getMany()
+  },
+
+  async loadOwnSeenLogs(userId: number, posts: Post[]) {
+    const qb = getRepository(PostSeenLog)
+      .createQueryBuilder('seenLog')
+      .where('seenLog.userId = :userId', { userId })
+    await loadRelations(posts, [{ name: 'seenLogs', qb }])
     return await qb.getMany()
   },
 
