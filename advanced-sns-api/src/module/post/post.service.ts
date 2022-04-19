@@ -6,6 +6,7 @@ import {
 import { validateOrFail } from 'src/lib/validate'
 import { getManager, getRepository, SelectQueryBuilder } from 'typeorm'
 import { Message } from '../message/message.entity'
+import { PostSeenLog } from '../post-seen-log/post-seen-log.entity'
 import { postViewableService } from '../post-viewable/post-viewable.service'
 import { Post } from './post.entity'
 
@@ -25,7 +26,7 @@ export interface FilterParams {
 
 export const postService = {
   getPostRelations() {
-    return ['user', 'messages', 'seenLogs', 'seenLogs.user', 'viewables']
+    return ['user', 'messages', 'viewables']
   },
 
   async find(params: FindParams) {
@@ -34,18 +35,25 @@ export const postService = {
     if (params.filter) qb = this._addSearchFilter(qb, params.filter)
     qb = addPagination(qb, params.pagination ?? {})
     let posts = await qb.getMany()
-    await loadRelations(posts, this.getPostRelations())
+    await loadRelations(posts, [
+      'user',
+      'messages',
+      'seenLogs',
+      'seenLogs.user',
+      'viewables',
+    ])
     return posts
   },
 
-  async findOneOrFail(id: number): Promise<Post> {
+  async findOneOrFail(userId: number, id: number): Promise<Post> {
     const post = await getRepository(Post).findOneOrFail(id, {})
     await loadRelations([post], this.getPostRelations())
+    await postService.loadOwnSeenLogs(userId, [post])
     return post
   },
 
-  async getCreatorId(postId: number): Promise<number> {
-    const post = await this.findOneOrFail(postId)
+  async getCreatorId(id: number): Promise<number> {
+    const post = await getRepository(Post).findOneOrFail(id, {})
     return post.userId
   },
 
@@ -77,6 +85,14 @@ export const postService = {
       .createQueryBuilder('message')
       .where('message.userId = :userId', { userId })
     await loadRelations(posts, [{ name: 'messages', qb }])
+    return await qb.getMany()
+  },
+
+  async loadOwnSeenLogs(userId: number, posts: Post[]) {
+    const qb = getRepository(PostSeenLog)
+      .createQueryBuilder('seenLog')
+      .where('seenLog.userId = :userId', { userId })
+    await loadRelations(posts, [{ name: 'seenLogs', qb }])
     return await qb.getMany()
   },
 

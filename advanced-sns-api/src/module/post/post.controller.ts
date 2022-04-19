@@ -51,7 +51,10 @@ export class PostController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const post = await postService.findOneOrFail(req.params.id)
+      const post = await postService.findOneOrFail(
+        req.currentUser.id!,
+        req.params.id
+      )
       await postPolicy.showableOrFail(post, req.currentUser.id!)
       res.json({ post: postSerializer.build(post) })
     } catch (e) {
@@ -78,7 +81,7 @@ export class PostController {
         req.currentUser.id!,
         req.body.post
       )
-      post = await postService.findOneOrFail(post.id!)
+      post = await postService.findOneOrFail(req.currentUser.id!, post.id!)
       res.json({ post: postSerializer.build(post) })
     } catch (e) {
       next(e)
