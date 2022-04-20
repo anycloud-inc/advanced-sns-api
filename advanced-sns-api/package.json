@@ -49,7 +49,7 @@
     "@types/multer": "^1.4.5",
     "@types/node": "^14.14.13",
     "@types/open-graph-scraper": "^4.3.0",
-    "advanced-sns-openapi-server-interface": "git+https://github.com/anycloud-inc/advanced-sns-openapi.git#379099401ef5769f967d887f9077abdcc5412dad",
+    "advanced-sns-openapi-server-interface": "git+https://github.com/anycloud-inc/advanced-sns-openapi.git#863c81fb522ea46982be12bd5eef847e42eeea8b",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "ts-jest": "^26.5.6",

@@ -7,6 +7,7 @@ import { validateOrFail } from 'src/lib/validate'
 import { getManager, getRepository, SelectQueryBuilder } from 'typeorm'
 import { Message } from '../message/message.entity'
 import { PostSeenLog } from '../post-seen-log/post-seen-log.entity'
+import { PostViewable } from '../post-viewable/post-viewable.entity'
 import { postViewableService } from '../post-viewable/post-viewable.service'
 import { Post } from './post.entity'
 
@@ -78,6 +79,16 @@ export const postService = {
     })
 
     return post
+  },
+
+  /**
+   * 投稿の公開範囲を更新する
+   */
+  async updateViewables(id: number, viewableUserIds: number[]) {
+    await getManager().transaction(async em => {
+      await em.getRepository(PostViewable).delete({ postId: id })
+      await postViewableService.createForPost(em, id, viewableUserIds)
+    })
   },
 
   async loadOwnMessages(userId: number, posts: Post[]) {
