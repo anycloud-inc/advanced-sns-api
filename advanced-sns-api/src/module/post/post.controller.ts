@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { Auth } from 'src/lib/auth'
-import { Controller, Delete, Get, Post } from 'src/lib/controller'
+import { Controller, Delete, Get, Patch, Post } from 'src/lib/controller'
 import { postSerializer } from './post.serializer'
 import { postService } from './post.service'
 import { Post as PostEntity } from './post.entity'
@@ -102,6 +102,33 @@ export class PostController {
       await postPolicy.deletableOrFail(req.params.id, req.currentUser.id!)
       await repo.delete(req.params.id)
       res.json({ success: true })
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  @Patch('/:id/viewables')
+  @Auth
+  async updateViewables(
+    req: Request<
+      openapi.operations['updatePostViewables']['parameters']['path'],
+      {},
+      openapi.operations['updatePostViewables']['requestBody']['content']['application/json'],
+      {}
+    >,
+    res: Response<
+      openapi.components['responses']['ResponsePost']['content']['application/json']
+    >,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      await postPolicy.updatableOrFail(req.params.id, req.currentUser.id!)
+      await postService.updateViewables(req.params.id, req.body.viewableUserIds)
+      const post = await postService.findOneOrFail(
+        req.currentUser.id!,
+        req.params.id
+      )
+      res.json({ post: postSerializer.build(post) })
     } catch (e) {
       next(e)
     }
